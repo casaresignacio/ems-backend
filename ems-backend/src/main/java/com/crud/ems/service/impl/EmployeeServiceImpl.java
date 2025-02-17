@@ -3,6 +3,7 @@ package com.crud.ems.service.impl;
 
 import com.crud.ems.dto.EmployeeDto;
 import com.crud.ems.entity.Employee;
+import com.crud.ems.exception.ResourceNotFoundException;
 import com.crud.ems.mapper.EmployeeMapper;
 import com.crud.ems.repository.EmployeeRepository;
 import com.crud.ems.service.EmployeeService;
@@ -22,5 +23,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee savedEmployee =  employeeRepository.save(employee);
 
         return EmployeeMapper.mapToEmployeeDto(savedEmployee);
+    }
+
+    @Override
+    public EmployeeDto getEmployeeById(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Employee is not exist with given id : " + employeeId));
+        return EmployeeMapper.mapToEmployeeDto(employee);
     }
 }
